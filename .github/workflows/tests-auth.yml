@@ -7,13 +7,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js 14.x
-        uses: actions/setup-node@v2
+      - name: Setup Node.js 14.21.3
+        uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
+          node-version: "14.21.3"
 
-      - run: cd auth && npm install && npm run test:ci
+      - name: Install and test
+        run: |
+          cd auth
+          npm ci
+          echo "Starting tests..."
+          npm run test:ci
+          echo "Tests completed."
