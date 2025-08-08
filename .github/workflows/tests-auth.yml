@@ -8,10 +8,9 @@ on:
 jobs:
   build:
      runs-on: ubuntu-20.04  
-    steps:
+     steps:
       - uses: actions/checkout@v2
 
-      # Add this single new step to set Node.js version
       - name: Setup Node.js 14.x
         uses: actions/setup-node@v2
         with:
