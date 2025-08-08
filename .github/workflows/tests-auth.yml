@@ -8,23 +8,43 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Node.js 14.21.3
         uses: actions/setup-node@v3
         with:
           node-version: "14.21.3"
 
-      - name: Show working directory and files
+      - name: Print directory tree
         run: |
+          echo "📁 Current directory:"
           pwd
-          ls -la
-          echo "Contents of auth:"
-          ls -la auth || echo "auth folder does not exist"
+          echo "📁 Directory structure:"
+          find . -type f | sed 's/^/  - /'
 
-      - name: Install and run tests
+      - name: Check for auth folder and package.json
+        run: |
+          if [ ! -d "./auth" ]; then
+            echo "❌ ERROR: auth folder not found."
+            exit 1
+          fi
+
+          if [ ! -f "./auth/package.json" ]; then
+            echo "❌ ERROR: auth/package.json not found."
+            ls -la ./auth
+            exit 1
+          fi
+
+          echo "✅ Found auth folder and package.json."
+
+      - name: Install dependencies and run tests
         run: |
           cd auth
+          echo "📦 Installing dependencies..."
           npm install
+
+          echo "🧪 Running tests..."
           npm run test:ci
