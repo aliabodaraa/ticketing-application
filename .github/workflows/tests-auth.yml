@@ -13,38 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 14.21.3
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "14.21.3"
+          node-version: 14.21.3
 
-      - name: Print directory tree
+      - name: Display structure
         run: |
-          echo "📁 Current directory:"
-          pwd
-          echo "📁 Directory structure:"
-          find . -type f | sed 's/^/  - /'
+          echo "Working dir: $(pwd)"
+          echo "Top-level files:"
+          ls -la
 
-      - name: Check for auth folder and package.json
-        run: |
-          if [ ! -d "./auth" ]; then
-            echo "❌ ERROR: auth folder not found."
-            exit 1
-          fi
-
-          if [ ! -f "./auth/package.json" ]; then
-            echo "❌ ERROR: auth/package.json not found."
-            ls -la ./auth
-            exit 1
-          fi
-
-          echo "✅ Found auth folder and package.json."
-
-      - name: Install dependencies and run tests
+      - name: Run tests
         run: |
           cd auth
-          echo "📦 Installing dependencies..."
           npm install
-
-          echo "🧪 Running tests..."
           npm run test:ci
