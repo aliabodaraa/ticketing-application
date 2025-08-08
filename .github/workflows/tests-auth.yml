@@ -7,19 +7,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04 # Explicit older Ubuntu version
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup exact Node.js 14.21.3
+      - name: Setup Node.js 14.x
         uses: actions/setup-node@v2
         with:
-          node-version: "14.21.3" # Exact version matching local
+          node-version: "14.x"
 
-      - name: Install build tools
-        run: sudo apt-get install -y build-essential python
-
-      - run: |
-          cd auth
-          npm install
-          npm run test:ci
+      - run: cd auth && npm install && npm run test:ci
