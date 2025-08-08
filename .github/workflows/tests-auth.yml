@@ -7,13 +7,44 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js 14.x
-        uses: actions/setup-node@v2
+      - name: Setup Node.js 14.21.3
+        uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
+          node-version: "14.21.3"
 
-      - run: cd auth && npm install && npm run test:ci
+      - name: Print directory tree
+        run: |
+          echo "📁 Current directory:"
+          pwd
+          echo "📁 Directory structure:"
+          find . -type f | sed 's/^/  - /'
+
+      - name: Check for auth folder and package.json
+        run: |
+          if [ ! -d "./auth" ]; then
+            echo "❌ ERROR: auth folder not found."
+            exit 1
+          fi
+
+          if [ ! -f "./auth/package.json" ]; then
+            echo "❌ ERROR: auth/package.json not found."
+            ls -la ./auth
+            exit 1
+          fi
+
+          echo "✅ Found auth folder and package.json."
+
+      - name: Install dependencies and run tests
+        run: |
+          cd auth
+          echo "📦 Installing dependencies..."
+          npm install
+
+          echo "🧪 Running tests..."
+          npm run test:ci
