@@ -6,24 +6,21 @@ on:
       - "auth/**"
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04  # More compatible with Node 14
-    timeout-minutes: 10    # Prevents hanging
+  build:
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js 14.x
+      - name: Setup Node.js 14.21.3
         uses: actions/setup-node@v3
         with:
-          node-version: "14.21.3"  # Your exact local version
-          cache: 'npm'
+          node-version: "14.21.3"
 
-      - name: Install dependencies
-        working-directory: ./auth
+      - name: Install and test
         run: |
-          sudo apt-get install -y build-essential python
+          cd auth
           npm ci
-
-      - name: Run tests
-        working-directory: ./auth
-        run: npm run test:ci -- --ci --maxWorkers=2 --detectOpenHandles --forceExit
+          echo "Starting tests..."
+          npm run test:ci
+          echo "Tests completed."
